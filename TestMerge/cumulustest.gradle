@@ -79,10 +79,14 @@ dependencies {
     compile(group: 'com.ibm.adtech.clarity.gdpr.change', name: 'GDPRChangeDetector-Prod', version: '2.0') {
 		exclude group: '*', module: '*'
 	}
-  	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.2.2.5.7.8.0') {
+  	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.2.2.5.7.8.8') {
 		exclude group: '*', module: '*'
 	}
-	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1.2.5.7.8.0') {
+	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1.2.5.7.8.8') {
+		exclude group: '*', module: '*'
+	}
+	/*New change in local*/
+	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.2.2.5.7.8.8') {
 		exclude group: '*', module: '*'
 	}
     compile files('dep-jar/com.ibm.json4j_1.0.9.jar')
