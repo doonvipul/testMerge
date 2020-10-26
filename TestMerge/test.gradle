@@ -1,0 +1,145 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'application'
+apply plugin: "com.jfrog.artifactory"
+apply plugin: 'maven-publish'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+version = '1.2.1'
+
+sourceSets {
+   main {
+      java {
+         srcDir 'src'
+      }
+   }
+}
+
+buildscript {
+    repositories {
+     jcenter()
+        maven {
+            url 'https://na.artifactory.swg-devops.com:443/artifactory/'
+            credentials {
+                username = ARTIFACTORY_USER
+                password = ARTIFACTORY_PASSWORD
+            }
+        }
+        
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.12.0"
+    }
+}
+
+processResources {
+   from('src/main/java') {
+    include ('**/*.properties')
+  }
+  from('src/migration') {
+    include ('**/*.properties')
+  }
+  from('src/test/java') {
+    include ('**/*.properties')
+    include ('**/*.json')
+    include ('**/*.txt')
+    include ('**/*.pdf')
+    include ('**/*.xlsx')
+    include ('**/*.zip')
+  }
+  doFirst {
+    println 'Copy the properties files and test files'
+    copy {
+      from 'dev-file/' + ENVIRONMENT
+      into 'build/deploy'
+      include '**/*.*'
+      include '*.*'
+     }
+  }
+}
+
+mainClassName = 'com.ibm.cumulus.data.build.CumulusDataBuilder'
+
+task test(overwrite: true, type: Test) {
+	ignoreFailures = true
+   	include '**/SaaSCapabilitiesTestSuite*.class'  
+}
+repositories {
+   jcenter()
+    maven {
+            url 'https://na.artifactory.swg-devops.com:443/artifactory/hyc-blueline-team-blueline-blueline-maven-local/'
+            credentials {
+                username = ARTIFACTORY_USER
+                password = ARTIFACTORY_PASSWORD
+            }
+        }
+}
+
+dependencies {
+    compile 'com.cloudant:cloudant-http:2.19.1'
+    compile 'com.cloudant:cloudant-client:2.19.1'
+    compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
+    compile ('org.apache.poi:poi:4.0.1'){
+    	exclude group: 'org.apache.commons', module: 'commons-math3'
+    }
+    compile ('org.apache.poi:poi-ooxml:4.0.1'){
+    	exclude group: 'org.apache.commons', module: 'commons-math3'
+    }
+    compile 'org.apache.poi:poi-examples:4.0.1'
+    compile 'org.apache.poi:poi-excelant:4.0.1'
+    compile 'com.ibm.websphere.appserver.api:com.ibm.websphere.appserver.api.distributedMap:2.0.10'
+    compile 'org.apache.httpcomponents:httpclient:4.5.2'
+    compile 'org.jsoup:jsoup:1.10.2'
+    compile 'org.junit.jupiter:junit-jupiter:5.6.2'
+    compile 'org.junit.vintage:junit-vintage-engine:5.6.2'
+    compile 'org.powermock:powermock-core:2.0.7'
+    compile 'org.mockito:mockito-core:2.18.0'
+    compile ('org.powermock:powermock-api-mockito2:2.0.7'){
+    	exclude group: 'org.mockito', module:'mockito-core'
+    }
+    compile 'org.powermock:powermock-module-junit4:2.0.7'
+    compile 'com.google.code.gson:gson:2.8.2'
+    compile ('org.skyscreamer:jsonassert:1.5.0'){
+    	exclude group: 'com.vaadin.external.google', module:'android-json'
+    }
+    compile 'com.sun.mail:javax.mail:1.6.2'
+    compile 'commons-codec:commons-codec:1.10'
+    compile 'commons-lang:commons-lang:2.3'
+    compile 'org.json:json:20170516'
+    compile 'stax:stax-api:1.0.1'
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.apache.kafka:kafka-clients:2.2.1'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile(group: 'com.ibm.adtech.clarity.gdpr.change', name: 'GDPRChangeDetector-Prod', version: '2.1') {
+		exclude group: '*', module: '*'
+	}
+	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2') {
+		exclude group: '*', module: '*'
+	}
+	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1') {
+		exclude group: '*', module: '*'
+	}
+    compile files('dep-jar/com.ibm.json4j_1.0.9.jar')
+    compile files('dep-jar/db2jcc4.jar')
+    compile files('dep-jar/db2jcc4_license_cisuz.jar')
+    compile files('dep-jar/db2jcc4_license_cu.jar')
+}
+
+war {
+	from 'WebContent'
+	archiveName 'SaaSCapabilities.war'
+}
+
+task deployToServer(type: Copy) {
+    from war.archivePath
+    into 'build/deploy/defaultServer/apps'
+}
+
+build.finalizedBy(deployToServer)
+
+task copyDependentJarsToLib(type: Copy) {
+    into "WebContent/WEB-INF/lib/"
+    from configurations.testRuntime
+ }
