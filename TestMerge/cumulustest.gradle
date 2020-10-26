@@ -76,13 +76,13 @@ dependencies {
     compile 'org.apache.kafka:kafka-clients:2.2.1'
     compile 'org.slf4j:slf4j-api:1.7.25'
 
-    compile(group: 'com.ibm.adtech.clarity.gdpr.change', name: 'GDPRChangeDetector-Prod', version: '2.') {
+    compile(group: 'com.ibm.adtech.clarity.gdpr.change', name: 'GDPRChangeDetector-Prod', version: '2.0') {
 		exclude group: '*', module: '*'
 	}
-	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2') {
+	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.3') {
 		exclude group: '*', module: '*'
 	}
-	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1') {
+	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1.3') {
 		exclude group: '*', module: '*'
 	}
     compile files('dep-jar/com.ibm.json4j_1.0.9.jar')
