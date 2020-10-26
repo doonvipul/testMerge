@@ -80,7 +80,7 @@ dependencies {
 		exclude group: '*', module: '*'
 	}
 
-  	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.2.2.5.7.master') {
+  	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.2.2.5.7.master2') {
 		exclude group: '*', module: '*'
 	}
 
@@ -90,7 +90,7 @@ dependencies {
 	/*New change in local*/
 	compile(group: 'com.ibm.blueline', name: 'BluelineETL-Dev', version: '2.2.2.2.5.7.8.8') {
 
-	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1.2.5.7.master') {
+	compile(group: 'com.ibm.adtech.clarity.gdpr.datasheet', name: 'GDPRDataSheetBuilder-Prod', version: '2.1.2.5.7.master2') {
 	exclude group: '*', module: '*'
 	}
     compile files('dep-jar/com.ibm.json4j_1.0.9.jar')
